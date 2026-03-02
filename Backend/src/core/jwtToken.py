@@ -1,0 +1,19 @@
+import jwt
+from datetime import datetime, timedelta, timezone
+import os
+from dotenv import load_dotenv  
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")  
+EXPIRATION_MINUTES = int(os.getenv("EXPIRATION_MINUTES", "30")) 
+
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=int(EXPIRATION_MINUTES))
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+
