@@ -5,16 +5,37 @@ import authService from '../services/authService';
 const Header = () => {
     const [user, setUser] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("LoggedIn") === "true");
     const navigate = useNavigate();
 
     useEffect(() => {
-        const currentUser = authService.getCurrentUser();
-        setUser(currentUser);
+        const checkAuth = () => {
+            setIsLoggedIn(localStorage.getItem("LoggedIn") === "true");
+            setUser(authService.getCurrentUser());
+        };
+
+        // Initial setup
+        checkAuth();
+
+        // Listen for storage changes from other tabs
+        window.addEventListener('storage', checkAuth);
+
+        // Custom event for intra-tab updates
+        window.addEventListener('auth-change', checkAuth);
+
+        return () => {
+            window.removeEventListener('storage', checkAuth);
+            window.removeEventListener('auth-change', checkAuth);
+        };
     }, []);
 
     const handleLogout = () => {
         authService.logout();
+        localStorage.removeItem("LoggedIn");
+        localStorage.removeItem("token");
+        window.dispatchEvent(new Event('auth-change'));
         setUser(null);
+        setIsLoggedIn(false);
         navigate('/login');
     };
 
@@ -33,42 +54,44 @@ const Header = () => {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center space-x-8">
-                        <Link 
-                            to="/" 
+                        <Link
+                            to="/"
                             className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 relative group"
                         >
                             Home
                             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-200"></span>
                         </Link>
-                        <Link 
-                            to="/predict" 
-                            className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 relative group"
-                        >
-                            Predict
-                            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-200"></span>
-                        </Link>
-                        {user ? (
-                            <>
-                                <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg">
+                        {isLoggedIn && (
+                            <Link
+                                to="/predict"
+                                className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 relative group"
+                            >
+                                Predict
+                                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-200"></span>
+                            </Link>
+                        )}
+                        {isLoggedIn ? (
+                            <div className="flex items-center gap-4">
+                                <Link to="/profile" className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors">
                                     <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
                                         <span className="text-white text-sm font-semibold">
-                                            {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                                            {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
                                         </span>
                                     </div>
                                     <span className="text-gray-700 font-medium">
-                                        Hello, {user.username || 'User'}
+                                        Hello, {user?.username || 'User'}
                                     </span>
-                                </div>
-                                <button 
-                                    onClick={handleLogout} 
+                                </Link>
+                                <button
+                                    onClick={handleLogout}
                                     className="px-4 py-2 text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 border border-gray-300 rounded-lg hover:border-orange-300 hover:bg-orange-50"
                                 >
                                     Logout
                                 </button>
-                            </>
+                            </div>
                         ) : (
-                            <Link 
-                                to="/login" 
+                            <Link
+                                to="/login"
                                 className="px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5"
                             >
                                 Login
@@ -77,7 +100,7 @@ const Header = () => {
                     </nav>
 
                     {/* Mobile Menu Button */}
-                    <button 
+                    <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
                     >
@@ -95,45 +118,47 @@ const Header = () => {
                 {isMenuOpen && (
                     <div className="md:hidden py-4 border-t border-gray-200">
                         <nav className="flex flex-col space-y-4">
-                            <Link 
-                                to="/" 
+                            <Link
+                                to="/"
                                 className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 py-2"
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 Home
                             </Link>
-                            <Link 
-                                to="/predict" 
-                                className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 py-2"
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Predict
-                            </Link>
-                            {user ? (
-                                <>
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg">
+                            {isLoggedIn && (
+                                <Link
+                                    to="/predict"
+                                    className="text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 py-2"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Predict
+                                </Link>
+                            )}
+                            {isLoggedIn ? (
+                                <div className="flex flex-col gap-3">
+                                    <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-lg cursor-pointer hover:bg-orange-100 transition-colors">
                                         <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
                                             <span className="text-white text-sm font-semibold">
-                                                {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                                                {user?.username ? user.username.charAt(0).toUpperCase() : 'U'}
                                             </span>
                                         </div>
                                         <span className="text-gray-700 font-medium">
-                                            Hello, {user.username || 'User'}
+                                            Hello, {user?.username || 'User'}
                                         </span>
-                                    </div>
-                                    <button 
+                                    </Link>
+                                    <button
                                         onClick={() => {
                                             handleLogout();
                                             setIsMenuOpen(false);
-                                        }} 
+                                        }}
                                         className="px-4 py-2 text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200 border border-gray-300 rounded-lg hover:border-orange-300 hover:bg-orange-50 text-left"
                                     >
                                         Logout
                                     </button>
-                                </>
+                                </div>
                             ) : (
-                                <Link 
-                                    to="/login" 
+                                <Link
+                                    to="/login"
                                     className="px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white font-semibold rounded-lg hover:from-orange-700 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg text-center"
                                     onClick={() => setIsMenuOpen(false)}
                                 >

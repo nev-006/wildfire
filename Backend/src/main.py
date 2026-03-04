@@ -1,9 +1,23 @@
 from fastapi import FastAPI
-
-from .api import wildfireApi, userRoute,authenticationRoute
+from contextlib import asynccontextmanager
+from apscheduler.schedulers.background import BackgroundScheduler
+from .api import wildfireApi, userRoute, authenticationRoute
 from fastapi.middleware.cors import CORSMiddleware
+from .services.automationService import run_wildfire_checks
 
-app = FastAPI()
+scheduler = BackgroundScheduler()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Start the scheduler
+    # We run it every 12 hours (twice a day)
+    scheduler.add_job(run_wildfire_checks, 'interval', hours=12)
+    scheduler.start()
+    yield
+    # Shutdown the scheduler
+    scheduler.shutdown()
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

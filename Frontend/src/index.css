@@ -1,2 +1,52 @@
 @import "tailwindcss";
 @import "./styles/animations.css";
+@import "leaflet/dist/leaflet.css";
+
+/* Custom map marker - fire ember glow */
+.custom-blinking-dot {
+    background: radial-gradient(circle, #fb923c 0%, #ef4444 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 12px 4px rgba(249, 115, 22, 0.6);
+    animation: pulse-ring 1.6s ease-out infinite;
+    border: 2.5px solid rgba(255, 255, 255, 0.9);
+}
+
+@keyframes pulse-ring {
+    0% {
+        box-shadow: 0 0 8px 2px rgba(249, 115, 22, 0.8), 0 0 0 0 rgba(249, 115, 22, 0.5);
+    }
+
+    70% {
+        box-shadow: 0 0 8px 2px rgba(249, 115, 22, 0.6), 0 0 0 18px rgba(249, 115, 22, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 8px 2px rgba(249, 115, 22, 0.8), 0 0 0 0 rgba(249, 115, 22, 0);
+    }
+}
+
+/* Leaflet tile integration */
+.leaflet-container {
+    border-radius: 1rem;
+    z-index: 10;
+}
+
+/* Hide default leaflet attribution branding to keep UI clean */
+.leaflet-control-attribution {
+    font-size: 9px !important;
+    opacity: 0.5;
+    background: rgba(0, 0, 0, 0.4) !important;
+    color: #aaa !important;
+    border-radius: 4px;
+}
+
+/* Style the zoom controls */
+.leaflet-control-zoom a {
+    background-color: #fff !important;
+    color: #f97316 !important;
+    border-color: #e5e7eb !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: #fff7ed !important;
+}

@@ -1,11 +1,18 @@
 from pydantic import BaseModel
 
 class User(BaseModel):
-
     name: str
     email: str
     password: str
-    username:str
+    username: str
+    location: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
+    alerts_enabled: bool = False
+
+class UserProfileUpdate(BaseModel):
+    location: str | None = None
+    alerts_enabled: bool | None = None
 
 class Token(BaseModel):
     access_token: str

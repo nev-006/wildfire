@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Predict from './pages/Predict'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Profile from './pages/Profile'
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/predict" element={<Predict />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Layout>
   )

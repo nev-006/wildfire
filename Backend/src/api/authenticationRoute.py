@@ -24,3 +24,10 @@ def authenticate_token(token:str = Depends(oauth2_scheme),db = Depends(get_db)):
 @router.post("/login")
 def login(data: OAuth2PasswordRequestForm = Depends(),db = Depends(get_db)):
     return authenticationService.login_user(data,db)
+
+def get_current_user(token: str = Depends(oauth2_scheme), db = Depends(get_db)):
+    token_data = authenticationService.verify_token(token, db, credentials_exception)
+    user = db["users"].find_one({"username": token_data.username})
+    if user is None:
+        raise credentials_exception
+    return user

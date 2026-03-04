@@ -3,9 +3,8 @@ import requests
 import io
 import math
 
-# NASA FIRMS Data Source (South Asia 24h)
-# You can change this to Global if needed: https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/csv/MODIS_C6_1_Global_24h.csv
-DATA_URL = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/csv/MODIS_C6_1_South_Asia_24h.csv"
+# NASA FIRMS Data Source (Global 24h)
+DATA_URL = "https://firms.modaps.eosdis.nasa.gov/data/active_fire/modis-c6.1/csv/MODIS_C6_1_Global_24h.csv"
 
 def get_haversine_distance(lat1, lon1, lat2, lon2):
     """
