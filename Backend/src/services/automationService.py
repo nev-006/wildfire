@@ -10,12 +10,13 @@ def run_wildfire_checks():
     print(f"Running scheduled wildfire checks at {datetime.now()}")
     
     # Find users who have alerts enabled and have a defined latitude/longitude
-    users_to_check = user_collection.find({
+    users_to_check = list(user_collection.find({
         "alerts_enabled": True,
         "latitude": {"$ne": None},
         "longitude": {"$ne": None},
         "email": {"$ne": None}
-    })
+    }))
+    print(f"[DEBUG] Found {len(users_to_check)} eligible user(s) to check.")
     
     for user in users_to_check:
         try:
@@ -43,9 +44,10 @@ def run_wildfire_checks():
             
             # Check Risk based on the returned Fire Radiative Power (FRP)
             predicted_frp = result.get("predicted_frp", 0)
+            print(f"[DEBUG] User {user.get('email')} → Predicted FRP: {predicted_frp}")
             
-            # If FRP > 50, then fire alert probability logic
-            if predicted_frp > 50.0: 
+            # ⚠️ TEST: threshold lowered to 0 to force email. Change back to 50.0 for production.
+            if predicted_frp > 0:
                 risk_prob = min(predicted_frp, 99.9)
                 send_alert_email(user["email"], user.get("location", "Unknown Location"), round(risk_prob, 2))
                     

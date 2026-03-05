@@ -35,3 +35,10 @@ app.add_middleware(
 app.include_router(wildfireApi.router)
 app.include_router(userRoute.router)
 app.include_router(authenticationRoute.router)
+
+# ⚠️ TEST ONLY — Remove before production
+@app.get("/test-alert")
+def test_alert():
+    from .services.automationService import run_wildfire_checks
+    run_wildfire_checks()
+    return {"message": "Wildfire check triggered! Check your terminal and inbox."}

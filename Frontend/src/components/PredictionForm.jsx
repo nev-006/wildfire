@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
-=======
-import React, { useState ,useEffect} from 'react';
->>>>>>> 8f17dee1da829672c7ced0d49775d7c57b68af1e
 import wildfireService from '../services/wildfireService';
 import { data } from 'react-router-dom';
 import Swal from "sweetalert2";
 import debounce from "lodash/debounce";
-<<<<<<< HEAD
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
@@ -26,8 +21,6 @@ const MapUpdater = ({ lat, lng }) => {
     }, [lat, lng, map]);
     return null;
 };
-=======
->>>>>>> 8f17dee1da829672c7ced0d49775d7c57b68af1e
 
 const PredictionForm = () => {
     const [formData, setFormData] = useState({
@@ -52,11 +45,7 @@ const PredictionForm = () => {
         const close = () => setShowSuggestions(false);
         window.addEventListener("click", close);
         return () => window.removeEventListener("click", close);
-<<<<<<< HEAD
     }, []);
-=======
-}, []);
->>>>>>> 8f17dee1da829672c7ced0d49775d7c57b68af1e
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -69,11 +58,7 @@ const PredictionForm = () => {
         if (name === "location_name") {
             fetchSuggestions(value);
         }
-<<<<<<< HEAD
     };
-=======
-};
->>>>>>> 8f17dee1da829672c7ced0d49775d7c57b68af1e
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -114,11 +99,6 @@ const PredictionForm = () => {
             }
 
             const data = await wildfireService.getAutofillData(payload);
-<<<<<<< HEAD
-
-=======
-           
->>>>>>> 8f17dee1da829672c7ced0d49775d7c57b68af1e
             setFormData({
                 ...formData,
                 latitude: data.latitude,
@@ -133,7 +113,6 @@ const PredictionForm = () => {
             });
         } catch (err) {
             setError("Could not find nearby fire data. Please try a different location.");
-<<<<<<< HEAD
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
@@ -159,40 +138,12 @@ const PredictionForm = () => {
         setSuggestions(data);
         setShowSuggestions(true);
     }, 1000);
-=======
-                Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: err.response.data.detail,
-                });
-        } finally {
-           
-            setLoading(false);
-        }
-    };
-const fetchSuggestions = debounce(async (value) => {
-    if (!value) {
-        setSuggestions([]);
-        return;
-    }
-    if (value.length < 3) {
-        setSuggestions([]);
-         return;
-    }
-    const location_name = value
-    const data = await wildfireService.locationFetch({ location_name })
-
-    setSuggestions(data);
-    setShowSuggestions(true);
-}, 1000);
->>>>>>> 8f17dee1da829672c7ced0d49775d7c57b68af1e
 
     return (
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
             <h2 className="text-3xl font-bold mb-8 text-gray-800 text-center">Fire Risk Prediction</h2>
 
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-<<<<<<< HEAD
                 <div className="md:col-span-2 flex flex-col items-center bg-orange-50 p-4 rounded-xl border border-orange-100 mb-4">
                     <p className="text-sm text-gray-600 mb-2">
                         Enter a <b>Location Name</b> (e.g., "California") OR{" "}
@@ -242,57 +193,6 @@ const fetchSuggestions = debounce(async (value) => {
                     >
                         ✨ Auto-fill Data from Satellite
                     </button>
-=======
-               <div className="md:col-span-2 flex flex-col items-center bg-orange-50 p-4 rounded-xl border border-orange-100 mb-4">
-                <p className="text-sm text-gray-600 mb-2">
-                    Enter a <b>Location Name</b> (e.g., "California") OR{" "}
-                    <b>Coordinates</b> to auto-fill data.
-                </p>
-
-                <div className="w-full max-w-md mb-3 relative">
-                    <input
-                    type="text"
-                    name="location_name"
-                    value={formData.location_name}
-                    onChange={(e) => {
-                        handleChange(e);
-                        fetchSuggestions(e.target.value);
-                    }}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none text-center"
-                    placeholder="Enter Location Name (Optional)"
-                    autoComplete="off"
-                    />
-
-                    {showSuggestions && suggestions.length > 0 && (
-                    <div className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50">
-                        {suggestions.map((s, i) => (
-                        <div
-                            key={i}
-                            className="p-3 hover:bg-orange-100 cursor-pointer text-left text-sm"
-                            onClick={() => {
-                            setFormData((prev) => ({
-                                ...prev,
-                                location_name: s.name
-                            }));
-                            setShowSuggestions(false);
-                            }}
-                        >
-                            {s.name}
-                        </div>
-                        ))}
-                    </div>
-                    )}
-                </div>
-
-                <button
-                    type="button"
-                    onClick={handleAutofill}
-                    disabled={loading}
-                    className="px-6 py-2 bg-orange-100 text-orange-700 font-semibold rounded-lg hover:bg-orange-200 transition-colors border border-orange-200"
-                >
-                    ✨ Auto-fill Data from Satellite
-                </button>
->>>>>>> 8f17dee1da829672c7ced0d49775d7c57b68af1e
                 </div>
 
                 {/* Premium Map Display */}
@@ -372,45 +272,49 @@ const fetchSuggestions = debounce(async (value) => {
                 </div>
             </form>
 
-            {error && (
-                <div className="mt-6 p-4 bg-red-50 text-red-700 border border-red-200 rounded-lg text-center">
-                    {error}
-                </div>
-            )}
-
-            {result !== null && (
-                <div className="mt-8 p-8 bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl shadow-xl text-center border border-gray-800 animate-fade-in-up">
-                    <h3 className="text-2xl font-light mb-2 text-gray-300">Predicted Fire Radiative Power (FRP)</h3>
-                    <div className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-red-500 my-4">
-                        {result.toFixed(2)} MW
+            {
+                error && (
+                    <div className="mt-6 p-4 bg-red-50 text-red-700 border border-red-200 rounded-lg text-center">
+                        {error}
                     </div>
-                    {/* <p className={`text-lg font-medium px-4 py-1 rounded-full inline-block ${result > 50 ? 'bg-red-500/20 text-red-400' : result > 10 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}`}>
+                )
+            }
+
+            {
+                result !== null && (
+                    <div className="mt-8 p-8 bg-gradient-to-br from-gray-900 to-black text-white rounded-2xl shadow-xl text-center border border-gray-800 animate-fade-in-up">
+                        <h3 className="text-2xl font-light mb-2 text-gray-300">Predicted Fire Radiative Power (FRP)</h3>
+                        <div className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-red-500 my-4">
+                            {result.toFixed(2)} MW
+                        </div>
+                        {/* <p className={`text-lg font-medium px-4 py-1 rounded-full inline-block ${result > 50 ? 'bg-red-500/20 text-red-400' : result > 10 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}`}>
                         Risk Level: {result > 50 ? 'High' : result > 10 ? 'Medium' : 'Low'}
                     </p> */}
 
-                    <p className="text-white text-lg mb-2">
-                        Prediction Score: <span className="font-bold">{result}</span>
-                    </p>
+                        <p className="text-white text-lg mb-2">
+                            Prediction Score: <span className="font-bold">{result}</span>
+                        </p>
 
-                    <p
-                        className={`text-lg font-medium px-4 py-1 rounded-full inline-block ${result > 50
-                            ? 'bg-red-500/20 text-red-400'
-                            : result > 10
-                                ? 'bg-yellow-500/20 text-yellow-400'
-                                : 'bg-green-500/20 text-green-400'
-                            }`}
-                    >
-                        Risk Level: {result > 50 ? 'High' : result > 10 ? 'Medium' : 'Low'}
-                    </p>
+                        <p
+                            className={`text-lg font-medium px-4 py-1 rounded-full inline-block ${result > 50
+                                ? 'bg-red-500/20 text-red-400'
+                                : result > 10
+                                    ? 'bg-yellow-500/20 text-yellow-400'
+                                    : 'bg-green-500/20 text-green-400'
+                                }`}
+                        >
+                            Risk Level: {result > 50 ? 'High' : result > 10 ? 'Medium' : 'Low'}
+                        </p>
 
-                    <div className="mt-4 text-sm text-gray-300">
-                        <p>Low Risk : 0 – 10</p>
-                        <p>Medium Risk : 11 – 50</p>
-                        <p>High Risk : &gt; 50</p>
+                        <div className="mt-4 text-sm text-gray-300">
+                            <p>Low Risk : 0 – 10</p>
+                            <p>Medium Risk : 11 – 50</p>
+                            <p>High Risk : &gt; 50</p>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };
 
